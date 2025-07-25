@@ -2,11 +2,22 @@
 
 # Get AWS region from AWS CLI configuration with error checking
 aws_region() {
-  local region=$(aws configure get region)
+  local region
+
+  # Try to get region from environment variables (AWS_REGION takes precedence)
+  region="${AWS_REGION:-${AWS_DEFAULT_REGION}}"
+
+  # If no environment variables are set, get from config file
+  if [ -z "$region" ]; then
+    region=$(aws configure get region)
+  fi
+
+  # If still no region found, exit with error
   if [ -z "$region" ]; then
     log ERROR "AWS region is not configured." >&2
     exit 1
   fi
+
   echo "$region"
 }
 
