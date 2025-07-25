@@ -1,0 +1,50 @@
+name: ggc
+help: AWS IoT Greengrass Component Development Commands
+version: 0.1.0
+
+environment_variables:
+- name: MESSAGE_LEVEL
+  help: Set the command message level
+  allowed: [DEBUG, INFO, WARN, ERROR]
+  default: INFO
+
+commands:
+- name: init
+  help: Initialize a new component
+  args:
+  - name: component_name
+    required: true
+    help: Name of the component to create
+  - name: language
+    help: Programming language to use
+    default: python
+    allowed:
+      - python
+      - ruby
+      - javascript
+      - shell
+
+- name: build
+  help: Build the component and prepare its artifacts
+  filters:
+  - is_project_root
+  args:
+  - name: component_version
+    required: true
+    help: Version of the component to build
+
+- name: publish
+  help: Upload the component artifacts and create component
+  filters:
+  - is_project_root
+  args:
+  - name: component_version
+    help: Version of the component to publish (default latest built version)
+
+- name: versions
+  help: Display the latest component versions
+  filters:
+  - is_project_root
+  args:
+  - name: component_name
+    help: Name of the component to check (default is the current component)
