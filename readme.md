@@ -1,4 +1,5 @@
-
+TODO:
+* auto increment version when build
 
 How to use:
 
