@@ -48,3 +48,11 @@ commands:
   args:
   - name: component_name
     help: Name of the component to check (default is the current component)
+
+- name: deploy
+  help: Deploy the component locally
+  filters:
+  - is_project_root
+  args:
+  - name: component_version
+    help: Version of the component to deploy (default latest built version)

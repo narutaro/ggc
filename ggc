@@ -30,6 +30,7 @@ ggc_usage() {
   printf "  %s   Build the component and prepare its artifacts\n" "build   "
   printf "  %s   Upload the component artifacts and create component\n" "publish "
   printf "  %s   Display the latest component versions\n" "versions"
+  printf "  %s   Deploy the component locally\n" "deploy  "
   echo
 
   # :command.long_usage
@@ -175,6 +176,35 @@ ggc_versions_usage() {
     # :argument.usage
     printf "  %s\n" "COMPONENT_NAME"
     printf "    Name of the component to check (default is the current component)\n"
+    echo
+
+  fi
+}
+
+# :command.usage
+ggc_deploy_usage() {
+  printf "ggc deploy - Deploy the component locally\n\n"
+
+  printf "%s\n" "Usage:"
+  printf "  ggc deploy [COMPONENT_VERSION]\n"
+  printf "  ggc deploy --help | -h\n"
+  echo
+
+  # :command.long_usage
+  if [[ -n "$long_usage" ]]; then
+    printf "%s\n" "Options:"
+
+    # :command.usage_fixed_flags
+    printf "  %s\n" "--help, -h"
+    printf "    Show this help\n"
+    echo
+
+    # :command.usage_args
+    printf "%s\n" "Arguments:"
+
+    # :argument.usage
+    printf "  %s\n" "COMPONENT_VERSION"
+    printf "    Version of the component to deploy (default latest built version)\n"
     echo
 
   fi
@@ -951,6 +981,45 @@ ggc_versions_command() {
   log DEBUG "Version check completed for $COMPONENT_NAME"
 }
 
+# :command.function
+ggc_deploy_command() {
+
+  # src/deploy_command.sh
+  # Read component information from YAML files
+  eval $(yaml_load "recipe.yaml")
+  eval $(yaml_load "config.yaml")
+
+  # Set variables from YAML content
+  COMPONENT_NAME=$ComponentName
+  S3_BUCKET_NAME=$S3BucketName
+  AWS_REGION=$AwsRegion
+  AWS_ACCOUNT=$AwsAccount
+  AWS_USER=$AwsUser
+
+  # Get component version from args or use LastBuiltVersion from config.yaml
+  COMPONENT_VERSION=${args[component_version]:-$LastBuiltVersion}
+  log DEBUG "Using component version - $COMPONENT_VERSION"
+
+  # Validate semantic version
+  check_semantic_version "$COMPONENT_VERSION" || exit 1
+
+  cmd1=(
+    sudo /greengrass/v2/bin/greengrass-cli
+    deployment create
+    --recipeDir recipes/
+    --artifactDir artifacts/
+    --merge "$COMPONENT_NAME=$COMPONENT_VERSION"
+  )
+
+  log DEBUG "Executing - ${cmd1[*]}"
+
+  if "${cmd1[@]}"; then
+    log INFO "Deployed component $COMPONENT_NAME:$COMPONENT_VERSION"
+  else
+    log ERROR "Failed to deploy $COMPONENT_NAME:$COMPONENT_VERSION"
+  fi
+}
+
 # :command.parse_requirements
 parse_requirements() {
   # :command.fixed_flags_filter
@@ -1016,6 +1085,13 @@ parse_requirements() {
       action="versions"
       shift
       ggc_versions_parse_requirements "$@"
+      shift $#
+      ;;
+
+    deploy)
+      action="deploy"
+      shift
+      ggc_deploy_parse_requirements "$@"
       shift $#
       ;;
 
@@ -1307,6 +1383,64 @@ ggc_versions_parse_requirements() {
 
 }
 
+# :command.parse_requirements
+ggc_deploy_parse_requirements() {
+  # :command.fixed_flags_filter
+  while [[ $# -gt 0 ]]; do
+    key="$1"
+    case "$key" in
+      --help | -h)
+        long_usage=yes
+        ggc_deploy_usage
+        exit
+        ;;
+
+      *)
+        break
+        ;;
+
+    esac
+  done
+
+  # :command.command_filter
+  action="deploy"
+
+  # :command.parse_requirements_while
+  while [[ $# -gt 0 ]]; do
+    key="$1"
+    case "$key" in
+
+      -?*)
+        printf "invalid option: %s\n" "$key" >&2
+        exit 1
+        ;;
+
+      *)
+        # :command.parse_requirements_case
+        # :command.parse_requirements_case_simple
+        # :argument.case
+        if [[ -z ${args['component_version']+x} ]]; then
+          args['component_version']=$1
+          shift
+        else
+          printf "invalid argument: %s\n" "$key" >&2
+          exit 1
+        fi
+
+        ;;
+
+    esac
+  done
+
+  # :command.user_filter
+  filter_error=$(filter_is_project_root)
+  if [[ -n $filter_error ]]; then
+    echo "$filter_error" >&2
+    exit 1
+  fi
+
+}
+
 # :command.initialize
 initialize() {
   declare -g version="0.1.0"
@@ -1334,6 +1468,7 @@ run() {
     "build") ggc_build_command ;;
     "publish") ggc_publish_command ;;
     "versions") ggc_versions_command ;;
+    "deploy") ggc_deploy_command ;;
   esac
 }
 
