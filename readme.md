@@ -149,7 +149,7 @@ src/
 
 ```mermaid
 graph TB
-    subgraph LM ["Local Development Machine"]
+    subgraph LM ["Local Machine"]
         DEV[Developer]
         FILES["Local Files<br/>src/ & recipe.yaml"]
         ARTIFACTS["Built Artifacts<br/>artifacts/"]
@@ -161,6 +161,10 @@ graph TB
         GG["Greengrass Service<br/>Component Registry"]
     end
     
+    subgraph GCD ["Greengrass Core Device"]
+        DEVICE2["Greengrass Core"]
+    end
+    
     DEV -->|ggc init| FILES
     FILES -->|ggc build| ARTIFACTS
     
@@ -170,10 +174,13 @@ graph TB
     ARTIFACTS -->|ggc deploy| DEVICE
     
     GG -.->|Web Console| DEVICE
+    GG -.->|Web Console| DEVICE2
     
     classDef localMachine fill:#e1f5fe
     classDef awsCloud fill:#fff3e0
+    classDef greengrassDevice fill:#e8f5e8
     
     class LM localMachine
     class AC awsCloud
+    class GCD greengrassDevice
 ```
