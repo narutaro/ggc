@@ -1,4 +1,4 @@
-# GGC - AWS IoT Greengrass Component Development Tool
+# GGC
 
 A command-line tool to streamline AWS IoT Greengrass component development
 
@@ -23,39 +23,6 @@ Commands:
   publish    Upload the component artifacts and create component
   versions   Display the latest component versions
   deploy     Deploy the component locally
-```
-
-## Architecture
-
-```mermaid
-graph TB
-    subgraph LM ["Local Development Machine"]
-        DEV[Developer]
-        FILES["Local Files<br/>src/ & recipe.yaml"]
-        ARTIFACTS["Built Artifacts<br/>artifacts/"]
-        DEVICE["Greengrass Core"]
-    end
-    
-    subgraph AC ["AWS Cloud"]
-        S3["S3 Bucket<br/>Component Artifacts"]
-        GG["Greengrass Service<br/>Component Registry"]
-    end
-    
-    DEV -->|ggc init| FILES
-    FILES -->|ggc build| ARTIFACTS
-    
-    ARTIFACTS -->|ggc publish| S3
-    S3 --> GG
-    
-    ARTIFACTS -->|ggc deploy| DEVICE
-    
-    GG -.->|Web Console| DEVICE
-    
-    classDef localMachine fill:#e1f5fe
-    classDef awsCloud fill:#fff3e0
-    
-    class LM localMachine
-    class AC awsCloud
 ```
 
 ## Installation
@@ -176,4 +143,37 @@ src/
     ├── templates.sh
     ├── validation.sh
     └── yaml.sh
+```
+
+## Architecture
+
+```mermaid
+graph TB
+    subgraph LM ["Local Development Machine"]
+        DEV[Developer]
+        FILES["Local Files<br/>src/ & recipe.yaml"]
+        ARTIFACTS["Built Artifacts<br/>artifacts/"]
+        DEVICE["Greengrass Core"]
+    end
+    
+    subgraph AC ["AWS Cloud"]
+        S3["S3 Bucket<br/>Component Artifacts"]
+        GG["Greengrass Service<br/>Component Registry"]
+    end
+    
+    DEV -->|ggc init| FILES
+    FILES -->|ggc build| ARTIFACTS
+    
+    ARTIFACTS -->|ggc publish| S3
+    S3 --> GG
+    
+    ARTIFACTS -->|ggc deploy| DEVICE
+    
+    GG -.->|Web Console| DEVICE
+    
+    classDef localMachine fill:#e1f5fe
+    classDef awsCloud fill:#fff3e0
+    
+    class LM localMachine
+    class AC awsCloud
 ```
