@@ -29,22 +29,18 @@ log DEBUG "Building component - $COMPONENT_NAME version $COMPONENT_VERSION"
 # Update version in the recipe.yaml file
 log DEBUG "Updating version references in recipe.yaml to $COMPONENT_VERSION"
 
-# First, update the ComponentVersion field
-# Note: Using '.bak' extension with sed -i for macOS/Linux cross-platform compatibility
-# (macOS requires an extension for backup files, while GNU sed doesn't)
-sed -i '.bak' "s/ComponentVersion:.*$/ComponentVersion: '$COMPONENT_VERSION'/" recipe.yaml
-rm -f recipe.yaml.bak
+# Update the ComponentVersion field
+sedi "s/ComponentVersion:.*$/ComponentVersion: '$COMPONENT_VERSION'/" recipe.yaml
 
-# Then, update S3 artifact paths - replace old version with new version in URI paths
+
+# Update S3 artifact paths - replace old version with new version in URI paths
 # $ComponentVersion is the current version from recipe.yaml (loaded at the beginning)
 # $COMPONENT_VERSION is the new version specified as command argument
 # Only update S3 paths if current version exists and is different from the new version
 if [[ -n "$ComponentVersion" && "$ComponentVersion" != "$COMPONENT_VERSION" ]]; then
   log DEBUG "Updating S3 paths from version $ComponentVersion to $COMPONENT_VERSION"
   # This replaces paths like s3://bucket/artifacts/component-name/0.1.0/ with s3://bucket/artifacts/component-name/0.2.0/
-  # Using '.bak' extension for macOS/Linux cross-platform compatibility
-  sed -i '.bak' "s|/artifacts/$COMPONENT_NAME/$ComponentVersion/|/artifacts/$COMPONENT_NAME/$COMPONENT_VERSION/|g" recipe.yaml
-  rm -f recipe.yaml.bak
+  sedi "s|/artifacts/$COMPONENT_NAME/$ComponentVersion/|/artifacts/$COMPONENT_NAME/$COMPONENT_VERSION/|g" recipe.yaml
 fi
 
 # Create version-specific recipe file
@@ -74,7 +70,6 @@ fi
 log DEBUG "Updating LastBuiltVersion in config.yaml"
 # LastBuiltVersion always exists in config.yaml template
 # Using '.bak' extension for macOS/Linux cross-platform compatibility
-sed -i '.bak' "s/^LastBuiltVersion:.*$/LastBuiltVersion: $COMPONENT_VERSION/" config.yaml
-rm -f config.yaml.bak
+sedi "s/^LastBuiltVersion:.*$/LastBuiltVersion: $COMPONENT_VERSION/" config.yaml
 
 log INFO "Component built - $COMPONENT_NAME:$COMPONENT_VERSION"
