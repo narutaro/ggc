@@ -117,6 +117,12 @@ ggc versions [component_name]
 
 ## Environment Variables
 
+Turn on debug logs:
+
+```
+export MESSAGE_LEVEL=DEBUG
+```
+
 - `MESSAGE_LEVEL`: Log level (DEBUG, INFO, WARN, ERROR)
 
 ## Development
@@ -129,23 +135,6 @@ bashly generate
 
 # Update auto-completion file (when adding/removing subcommands)
 bashly add completions_script
-```
-
-### Project Structure
-
-```
-src/
-├── bashly.yml          # Command definition
-├── *_command.sh        # Command implementations
-└── lib/                # Shared libraries
-    ├── aws_info.sh
-    ├── colors.sh
-    ├── filters.sh
-    ├── log.sh
-    ├── render.sh
-    ├── templates.sh
-    ├── validation.sh
-    └── yaml.sh
 ```
 
 ## Architecture
