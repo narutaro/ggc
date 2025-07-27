@@ -62,7 +62,8 @@ brew install bash-completion  # for macOS
 # apt install bash-completion   # for Ubuntu
 
 # Add to ~/.zshrc
-echo "autoload -U +X bashcompinit && bashcompinit" >> ~/.zshrc
+echo "autoload -Uz compinit && compinit" >> ~/.zshrc
+echo "autoload -Uz bashcompinit && bashcompinit" >> ~/.zshrc
 echo "source ~/.local/bin/ggc-completions.bash" >> ~/.zshrc
 ```
 
