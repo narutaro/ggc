@@ -1,6 +1,6 @@
-# GGC - AWS IoT Greengrass Component Development Tool
+# GGC
 
-A command-line tool to streamline AWS IoT Greengrass component development
+A command-line tool to streamline AWS IoT Greengrass component development. If you find the official GDK (Greengrass Development Kit) cumbersome with its many configuration files and complex setup, GGC offers a simpler, more intuitive alternative.
 
 ## Prerequisites
 
@@ -25,7 +25,7 @@ Commands:
   deploy     Deploy the component locally
 ```
 
-**Debug mode:** Set `export MESSAGE_LEVEL=DEBUG` to enable detailed logging output. Other available levels: INFO, WARN, ERROR.
+**Debug mode:** Set `export MESSAGE_LEVEL=DEBUG` to enable detailed logging output. Other available levels: `INFO`, `WARN`, `ERROR`.
 
 ## Installation
 
@@ -77,7 +77,7 @@ This command:
 - Initializes the project structure with necessary files
 - Generates a `config.yaml` file with auto-configured parameters
 
-Supported languages are python (default), ruby, javascript, and shell.
+Supported languages are `python` (default), `ruby`, `javascript`, and `shell`.
 
 **Examples:**
 ```bash
@@ -145,7 +145,7 @@ Displays the latest component versions available locally and remotely.
 
 ## Development
 
-This tool is built with [bashly](https://bashly.dannyb.co/), a bash CLI framework. See the bashly documentation for detailed development information.
+This tool is built with [Bashly](https://bashly.dannyb.co/), a bash CLI framework. See the Bashly documentation for detailed development information.
 
 ### Build
 
