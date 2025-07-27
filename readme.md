@@ -1,11 +1,11 @@
 # GGC
 
-A command-line tool to streamline AWS IoT Greengrass component development. If you find the official GDK (Greengrass Development Kit) cumbersome with its many configuration files and complex setup, GGC offers a simpler, more intuitive alternative.
+A command-line tool to streamline AWS IoT Greengrass component development. If you find the official GDK (Greengrass Development Kit) cumbersome with its many configuration files and complex setup, GGC offers a simpler, more intuitive alternative. GGC runs as a single shell script, making it easy to install and use.
 
 ## Prerequisites
 
-- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) - Required for build and publish commands
-- [Greengrass CLI](https://docs.aws.amazon.com/greengrass/v2/developerguide/gg-cli-reference.html) - Required for deploy command only
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) - Required for `build` and `publish` commands
+- [Greengrass CLI](https://docs.aws.amazon.com/greengrass/v2/developerguide/gg-cli-reference.html) - Required for `deploy` command only
 
 ## Commands
 
@@ -29,6 +29,8 @@ Commands:
 
 ## Installation
 
+GGC is distributed as a single shell script, making installation straightforward.
+
 ```bash
 # Create ~/.local/bin directory if it doesn't exist
 mkdir -p ~/.local/bin
@@ -37,14 +39,16 @@ mkdir -p ~/.local/bin
 curl -o ~/.local/bin/ggc https://raw.githubusercontent.com/narutaro/ggc/main/ggc
 chmod +x ~/.local/bin/ggc
 
-# Download auto-completion file
-curl -o ~/.local/bin/ggc-completions.bash https://raw.githubusercontent.com/narutaro/ggc/main/completions.bash
-
 # Add to PATH (add to ~/.bashrc or ~/.zshrc)
 export PATH="$PATH:$HOME/.local/bin"
 ```
 
 ### Enable auto-completion (optional)
+
+```bash
+# Download auto-completion file
+curl -o ~/.local/bin/ggc-completions.bash https://raw.githubusercontent.com/narutaro/ggc/main/completions.bash
+```
 
 **For Bash:**
 ```bash
