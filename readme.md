@@ -148,6 +148,8 @@ Displays the latest component versions available locally and remotely.
 
 ## Architecture
 
+If your development machine has Greengrass Core installed, you can deploy components locally using `ggc deploy`, or remotely to other Greengrass core devices through the cloud using `ggc publish`.
+
 ```mermaid
 graph TB
     subgraph LM ["Local Machine"]
