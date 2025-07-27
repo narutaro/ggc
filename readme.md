@@ -1,4 +1,4 @@
-# GGC
+# GGC - AWS IoT Greengrass Component Development Tool
 
 A command-line tool to streamline AWS IoT Greengrass component development
 
@@ -25,6 +25,8 @@ Commands:
   deploy     Deploy the component locally
 ```
 
+**Debug mode:** Set `export MESSAGE_LEVEL=DEBUG` to enable detailed logging output. Other available levels: INFO, WARN, ERROR.
+
 ## Installation
 
 ```bash
@@ -32,8 +34,11 @@ Commands:
 mkdir -p ~/.local/bin
 
 # Download ggc script
-curl -o ~/.local/bin/ggc https://raw.githubusercontent.com/narutaro/ggc/main/ggc
+curl -o ~/.local/bin/ggc https://raw.githubusercontent.com/username/ggc/main/ggc
 chmod +x ~/.local/bin/ggc
+
+# Download auto-completion file
+curl -o ~/.local/bin/ggc-completions.bash https://raw.githubusercontent.com/username/ggc/main/completions.bash
 
 # Add to PATH (add to ~/.bashrc or ~/.zshrc)
 export PATH="$PATH:$HOME/.local/bin"
@@ -41,35 +46,38 @@ export PATH="$PATH:$HOME/.local/bin"
 
 ### Enable auto-completion (optional)
 
-Download auto-completion file
-
-```bash
-curl -o ~/.local/bin/ggc-completions.bash https://raw.githubusercontent.com/narutaro/ggc/main/completions.bash
-```
-
-**Bash:**
+**For Bash:**
 ```bash
 echo "source ~/.local/bin/ggc-completions.bash" >> ~/.bashrc
 ```
 
-**Zsh:**
+**For Zsh:**
 ```bash
 # Install bash-completion first
 brew install bash-completion  # for macOS
 # apt install bash-completion   # for Ubuntu
 
 # Add to ~/.zshrc
-echo "autoload -Uz bashcompinit && bashcompinit" >> ~/.zshrc
+echo "autoload -U +X bashcompinit && bashcompinit" >> ~/.zshrc
 echo "source ~/.local/bin/ggc-completions.bash" >> ~/.zshrc
 ```
 
 ## Usage
 
-### Initialize a component
+### Development Workflow
+
+#### 1. Initialize a new component
 
 ```bash
 ggc init <component_name> [language]
 ```
+
+This command:
+- Creates an S3 bucket for storing component artifacts
+- Initializes the project structure with necessary files
+- Generates a `config.yaml` file with auto-configured parameters
+
+Supported languages are python (default), ruby, javascript, and shell.
 
 **Examples:**
 ```bash
@@ -83,58 +91,81 @@ Generated structure:
 my_component/
 ├── artifacts/
 │   └── my_component/
-├── config.yaml
+├── config.yaml         # ← auto-generated configuration
 ├── recipes/
-├── recipe.yaml          # ← edit
-└── src/                 # ← edit
+├── recipe.yaml         # ← edit component recipe
+└── src/                # ← edit source code
     └── my_component.py
 ```
 
-Developers only need to edit files in `src/` and `recipe.yaml`.
+#### 2. Develop your component
 
-### Other commands
+- Develop your component logic in the `src/` directory
+- Update `recipe.yaml` with component metadata and dependencies
+
+#### 3. Build the component
 
 ```bash
-# Build
 ggc build <version>
+```
 
-# Publish
+This command:
+- Builds your component with the specified version
+- Saves the new version to `recipes/` and `artifacts/` directories
+- Prepares artifacts for deployment
+
+#### 4. Deploy the component
+
+Choose one of the deployment methods:
+
+**For remote deployment:**
+```bash
 ggc publish [version]
+```
+- Uploads component artifacts to S3
+- Creates the component in AWS IoT Greengrass registry
+- Makes it available for deployment via AWS Console
 
-# Deploy
+**For local deployment:**
+```bash
 ggc deploy [version]
+```
+- Uses Greengrass CLI to deploy directly to the local Greengrass core
+- Ideal for development and testing
 
-# Check versions
+#### 5. Check component versions
+
+```bash
 ggc versions [component_name]
 ```
 
-## Supported Languages
+Displays the latest component versions available locally and remotely.
 
-- Python (default)
-- Ruby
-- JavaScript
-- Shell
-
-## Environment Variables
-
-Turn on debug logs:
-
-```
-export MESSAGE_LEVEL=DEBUG
-```
-
-- `MESSAGE_LEVEL`: Log level (DEBUG, INFO, WARN, ERROR)
+> **Note:** See the [Architecture](#architecture) diagram above for a visual representation of the deployment flow.
 
 ## Development
 
+This tool is built with [bashly](https://bashly.dannyb.co/), a bash CLI framework. See the bashly documentation for detailed development information.
+
 ### Build
 
+Run the following commands when making changes to the tool itself:
+
 ```bash
-# Generate command with bashly
+# Generate command when bashly.yml is modified or *_command.sh files are changed
 bashly generate
 
-# Update auto-completion file (when adding/removing subcommands)
+# Update auto-completion file when adding/removing subcommands or changing command structure
 bashly add completions_script
+```
+
+### Project Structure
+
+```
+src/
+├── bashly.yml          # Command definition
+├── *_command.sh        # Command implementations
+└── lib/                # Shared libraries
 ```
 
 ## Architecture
