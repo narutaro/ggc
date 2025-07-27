@@ -146,33 +146,6 @@ ggc versions [component_name]
 
 Displays the latest component versions available locally and remotely.
 
-> **Note:** See the [Architecture](#architecture) diagram above for a visual representation of the deployment flow.
-
-## Development
-
-This tool is built with [Bashly](https://bashly.dannyb.co/), a bash CLI framework. See the Bashly documentation for detailed development information.
-
-### Build
-
-Run the following commands when making changes to the tool itself:
-
-```bash
-# Generate command when bashly.yml is modified or *_command.sh files are changed
-bashly generate
-
-# Update auto-completion file when adding/removing subcommands or changing command structure
-bashly add completions_script
-```
-
-### Project Structure
-
-```
-src/
-├── bashly.yml          # Command definition
-├── *_command.sh        # Command implementations
-└── lib/                # Shared libraries
-```
-
 ## Architecture
 
 ```mermaid
@@ -211,4 +184,29 @@ graph TB
     class LM localMachine
     class AC awsCloud
     class GCD greengrassDevice
+```
+
+## Development
+
+This tool is built with [Bashly](https://bashly.dannyb.co/), a bash CLI framework. See the Bashly documentation for detailed development information.
+
+### Build
+
+Run the following commands when making changes to the tool itself:
+
+```bash
+# Generate command when bashly.yml is modified or *_command.sh files are changed
+bashly generate
+
+# Update auto-completion file when adding/removing subcommands or changing command structure
+bashly add completions_script
+```
+
+### Project Structure
+
+```
+src/
+├── bashly.yml          # Command definition
+├── *_command.sh        # Command implementations
+└── lib/                # Shared libraries
 ```
