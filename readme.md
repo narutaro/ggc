@@ -34,11 +34,11 @@ Commands:
 mkdir -p ~/.local/bin
 
 # Download ggc script
-curl -o ~/.local/bin/ggc https://raw.githubusercontent.com/username/ggc/main/ggc
+curl -o ~/.local/bin/ggc https://raw.githubusercontent.com/narutaro/ggc/main/ggc
 chmod +x ~/.local/bin/ggc
 
 # Download auto-completion file
-curl -o ~/.local/bin/ggc-completions.bash https://raw.githubusercontent.com/username/ggc/main/completions.bash
+curl -o ~/.local/bin/ggc-completions.bash https://raw.githubusercontent.com/narutaro/ggc/main/completions.bash
 
 # Add to PATH (add to ~/.bashrc or ~/.zshrc)
 export PATH="$PATH:$HOME/.local/bin"
