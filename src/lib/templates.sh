@@ -26,16 +26,9 @@ ComponentConfiguration:
 Manifests:
   - Platform:
       os: linux
+      runtime: '*'
     Artifacts:
-      - URI: s3://S3_BUCKET_NAME/artifacts/COMPONENT_NAME/0.0.0/files.zip
-        Unarchive: ZIP
-    Lifecycle:
-      run: |
-        RUNTIME_CMD {artifacts:decompressedPath}/files/COMPONENT_NAME.EXTENSION "{configuration:/Message}"
-  - Platform:
-      os: windows
-    Artifacts:
-      - URI: s3://S3_BUCKET_NAME/artifacts/COMPONENT_NAME/0.0.0/files.zip
+      - Uri: s3://S3_BUCKET_NAME/artifacts/COMPONENT_NAME/0.0.0/files.zip
         Unarchive: ZIP
     Lifecycle:
       run: |
