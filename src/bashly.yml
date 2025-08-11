@@ -1,6 +1,6 @@
 name: ggc
 help: AWS IoT Greengrass Component Development Commands
-version: 0.1.0
+version: 0.2.0
 
 environment_variables:
 - name: MESSAGE_LEVEL
