@@ -1,5 +1,8 @@
 # GGC
 
+![Greengrass Classic](https://img.shields.io/badge/Greengrass-Classic-green)
+![Greengrass Lite](https://img.shields.io/badge/Greengrass-Lite-blue)
+
 A command-line tool to streamline AWS IoT Greengrass component development. If you find the official GDK (Greengrass Development Kit) cumbersome with its many configuration files and complex setup, GGC offers a simpler, more intuitive alternative. GGC runs as a single shell script, making it easy to install and use.
 
 ## Prerequisites
